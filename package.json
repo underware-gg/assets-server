@@ -1,7 +1,11 @@
 {
-  "name": "server",
+  "name": "@underware/assets-server",
   "version": "0.1.0",
-  "private": true,
+  "description": "Underware Assets Server",
+  "homepage": "https://github.com/underware-gg/assets-server",
+  "author": "Underware",
+  "license": "CC0",
+  "private": false,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -9,19 +13,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@underware_gg/pistols-sdk": "0.13.1",
+    "@underware/pistols-sdk": "0.13.3",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "starknet": "6.23.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
-    "@eslint/eslintrc": "^3"
+    "typescript": "^5"
   }
 }

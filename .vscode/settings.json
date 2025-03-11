@@ -3,7 +3,6 @@
     "**/node_modules": true,
     "**/build": true,
     "**/target": true,
-    "**/.next": true,
     "**/.turbo": true,
     "**/.vercel": true,
     "**/*.tsbuildinfo": true,
@@ -13,6 +12,7 @@
     "**/*-lock.json": true,
     "**/*-lock.yaml": true,
     "**/*.lock": true,
+    "**/.next": true,
     "**/dist": true,
     "**/.gitignore": true,
     "**/.gitmodules": true

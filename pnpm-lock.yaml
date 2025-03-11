@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@underware_gg/pistols-sdk':
-        specifier: 0.13.1
-        version: 0.13.1(react@19.0.0)(starknet@6.23.1)
+      '@underware/pistols-sdk':
+        specifier: 0.13.3
+        version: 0.13.3(react@19.0.0)(starknet@6.23.1)
       next:
         specifier: 15.2.1
         version: 15.2.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -376,8 +376,8 @@ packages:
     resolution: {integrity: sha512-2z8JQJWAzPdDd51dRQ/oqIJxe99/hoLIqmf8RMCAJQtYDc535W/Jt2+RTP4bP0aKeBG1F65yjIZuczOXCmbWwg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@underware_gg/pistols-sdk@0.13.1':
-    resolution: {integrity: sha512-m7GXAjRPwSg7zF2qnvuflDr+MxdZd2P2mzuSTCIMrVwj5N1KQI20lI4iiAsXv3UDA1YD4Ef7FWF/0j8ID3ee1g==}
+  '@underware/pistols-sdk@0.13.3':
+    resolution: {integrity: sha512-TqRBRpobdRhodAfX4lVhFiFOLNgCPQGskttu7R2GAcVUcpp43ZxmzIJXUNpBRONtMwyvLtUN46M4qH5wMG/Gsw==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -1968,7 +1968,7 @@ snapshots:
       '@typescript-eslint/types': 8.26.0
       eslint-visitor-keys: 4.2.0
 
-  '@underware_gg/pistols-sdk@0.13.1(react@19.0.0)(starknet@6.23.1)':
+  '@underware/pistols-sdk@0.13.3(react@19.0.0)(starknet@6.23.1)':
     dependencies:
       buffer: 6.0.3
       event-emitter: 0.3.5
