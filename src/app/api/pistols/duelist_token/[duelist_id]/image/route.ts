@@ -1,5 +1,7 @@
 import { type NextRequest } from 'next/server'
+import { lookupAddresses } from '@cartridge/controller'
 import { duelist_token as token } from '@underware/pistols-sdk/pistols/tokens'
+import { bigintToHex, capitalize } from '@underware/pistols-sdk/utils'
 import { constants } from '@underware/pistols-sdk/pistols/gen'
 
 // next.js app routerAPI routes
@@ -14,6 +16,8 @@ export async function GET(
   const { duelist_id } = await params
   // url params
   const searchParams = request.nextUrl.searchParams
+
+  // build props
   const props: token.DuelistSvgProps = {
     // base_uri: 'https://assets.underware.gg',
     duelist_id: BigInt(duelist_id),
@@ -32,6 +36,15 @@ export async function GET(
     is_memorized: searchParams.get('is_memorized') === 'true',
     duel_id: parseInt(searchParams.get('duel_id') || '0'),
   }
+
+  // get player name
+  if (props.username === '' && props.owner !== '0x0') {
+    const _owner = bigintToHex(props.owner)
+    const addresses = await lookupAddresses([_owner])
+    props.username = capitalize(addresses.get(_owner) || '')
+  }
+
+  // render svg
   const svg = token.renderSvg(props)
 
   return new Response(svg, {
