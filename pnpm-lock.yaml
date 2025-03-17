@@ -12,8 +12,8 @@ importers:
         specifier: ^0.7.4
         version: 0.7.4(open@10.1.0)(starknet@6.23.1)
       '@underware/pistols-sdk':
-        specifier: 0.13.3
-        version: 0.13.3(@cartridge/controller@0.7.4(open@10.1.0)(starknet@6.23.1))(react@19.0.0)(starknet@6.23.1)
+        specifier: 0.13.5
+        version: 0.13.5(@cartridge/controller@0.7.4(open@10.1.0)(starknet@6.23.1))(react@19.0.0)(starknet@6.23.1)
       next:
         specifier: 15.2.1
         version: 15.2.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -442,8 +442,8 @@ packages:
     resolution: {integrity: sha512-2z8JQJWAzPdDd51dRQ/oqIJxe99/hoLIqmf8RMCAJQtYDc535W/Jt2+RTP4bP0aKeBG1F65yjIZuczOXCmbWwg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@underware/pistols-sdk@0.13.3':
-    resolution: {integrity: sha512-TqRBRpobdRhodAfX4lVhFiFOLNgCPQGskttu7R2GAcVUcpp43ZxmzIJXUNpBRONtMwyvLtUN46M4qH5wMG/Gsw==}
+  '@underware/pistols-sdk@0.13.5':
+    resolution: {integrity: sha512-1i8eUncQNboMrApwtAdIFCDJThB6cW5SILc6e6sWCHmrBddwB3ZbYNwE47LI0PYN83m5xuhszk7TmKSHnVRf+A==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -453,6 +453,7 @@ packages:
       '@cartridge/presets': 'catalog:'
       '@dojoengine/core': 'catalog:'
       '@dojoengine/sdk': 'catalog:'
+      '@dojoengine/torii-client': 'catalog:'
       '@dojoengine/utils': 'catalog:'
       '@starknet-react/chains': 'catalog:'
       '@starknet-react/core': 'catalog:'
@@ -2153,7 +2154,7 @@ snapshots:
       '@typescript-eslint/types': 8.26.0
       eslint-visitor-keys: 4.2.0
 
-  '@underware/pistols-sdk@0.13.3(@cartridge/controller@0.7.4(open@10.1.0)(starknet@6.23.1))(react@19.0.0)(starknet@6.23.1)':
+  '@underware/pistols-sdk@0.13.5(@cartridge/controller@0.7.4(open@10.1.0)(starknet@6.23.1))(react@19.0.0)(starknet@6.23.1)':
     dependencies:
       '@cartridge/controller': 0.7.4(open@10.1.0)(starknet@6.23.1)
       buffer: 6.0.3

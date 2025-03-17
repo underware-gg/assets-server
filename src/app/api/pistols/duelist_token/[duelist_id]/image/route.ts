@@ -1,8 +1,7 @@
 import { type NextRequest } from 'next/server'
-import { lookupAddresses } from '@cartridge/controller'
 import { duelist_token as token } from '@underware/pistols-sdk/pistols/tokens'
-import { bigintToHex, capitalize } from '@underware/pistols-sdk/utils'
 import { constants } from '@underware/pistols-sdk/pistols/gen'
+import { getControllerUsername } from '@/utils/controller'
 
 // next.js app routerAPI routes
 // https://nextjs.org/docs/app/building-your-application/routing/route-handlers#dynamic-route-segments
@@ -39,9 +38,7 @@ export async function GET(
 
   // get player name
   if (props.username === '' && props.owner !== '0x0') {
-    const _owner = bigintToHex(props.owner)
-    const addresses = await lookupAddresses([_owner])
-    props.username = capitalize(addresses.get(_owner) || '')
+    props.username = await getControllerUsername(props.owner)
   }
 
   // render svg
