@@ -13,8 +13,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cartridge/controller": "^0.7.4",
-    "@underware/pistols-sdk": "0.13.5",
+    "@cartridge/controller": "^0.7.12",
+    "@underware/pistols-sdk": "0.15.1",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

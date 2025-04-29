@@ -18,27 +18,28 @@ export async function GET(
   const props: token.DuelSvgProps = {
     // base_uri: 'https://assets.underware.gg',
     duel_id: BigInt(duel_id),
-    table_id: searchParams.get('table_id') || '',
+    duel_type: searchParams.get('duel_type') as constants.DuelType || constants.DuelType.Undefined,
     premise: searchParams.get('premise') as constants.Premise || constants.Premise.Undefined,
-    quote: searchParams.get('quote') || '',
+    message: searchParams.get('message') || '',
     state: searchParams.get('state') as constants.ChallengeState || constants.ChallengeState.Null,
     winner: parseInt(searchParams.get('winner') || '0'),
-    profile_type_a: searchParams.get('profile_type_a') as constants.ProfileType || constants.ProfileType.Undefined,
-    profile_type_b: searchParams.get('profile_type_b') as constants.ProfileType || constants.ProfileType.Undefined,
+    profile_type_a: searchParams.get('profile_type_a') as constants.DuelistProfile || constants.DuelistProfile.Undefined,
+    profile_type_b: searchParams.get('profile_type_b') as constants.DuelistProfile || constants.DuelistProfile.Undefined,
     profile_id_a: parseInt(searchParams.get('profile_id_a') || '0'),
     profile_id_b: parseInt(searchParams.get('profile_id_b') || '0'),
     username_a: searchParams.get('username_a') || '',
     username_b: searchParams.get('username_b') || '',
-    owner_a: searchParams.get('owner_a') || '0x0',
-    owner_b: searchParams.get('owner_b') || '0x0',
+    address_a: searchParams.get('address_a') || '0x0',
+    address_b: searchParams.get('address_b') || '0x0',
+    season_id: parseInt(searchParams.get('season_id') || '0'),
   }
 
   // get player names
-  if (props.username_a === '' && props.owner_a !== '0x0') {
-    props.username_a = await getControllerUsername(props.owner_a)
+  if (props.username_a === '' && props.address_a !== '0x0') {
+    props.username_a = await getControllerUsername(props.address_a)
   }
-  if (props.username_b === '' && props.owner_b !== '0x0') {
-    props.username_b = await getControllerUsername(props.owner_b)
+  if (props.username_b === '' && props.address_b !== '0x0') {
+    props.username_b = await getControllerUsername(props.address_b)
   }
 
   const svg = token.renderSvg(props)

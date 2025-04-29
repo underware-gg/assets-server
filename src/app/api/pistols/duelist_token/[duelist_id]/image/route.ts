@@ -24,7 +24,7 @@ export async function GET(
     username: searchParams.get('username') || '',
     honour: parseInt(searchParams.get('honour') || '0'),
     archetype: searchParams.get('archetype') as constants.Archetype || constants.Archetype.Undefined,
-    profile_type: searchParams.get('profile_type') as constants.ProfileType || constants.ProfileType.Undefined,
+    profile_type: searchParams.get('profile_type') as constants.DuelistProfile || constants.DuelistProfile.Undefined,
     profile_id: parseInt(searchParams.get('profile_id') || '0'),
     total_duels: parseInt(searchParams.get('total_duels') || '0'),
     total_wins: parseInt(searchParams.get('total_wins') || '0'),
@@ -34,6 +34,7 @@ export async function GET(
     lives: parseInt(searchParams.get('lives') || '0'),
     is_memorized: searchParams.get('is_memorized') === 'true',
     duel_id: parseInt(searchParams.get('duel_id') || '0'),
+    pass_id: parseInt(searchParams.get('pass_id') || '0'),
   }
 
   // get player name
