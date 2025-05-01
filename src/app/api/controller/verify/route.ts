@@ -1,18 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ControllerVerifyParams, verify_message } from "../lib";
 
-// next.js app routerAPI routes
-// https://nextjs.org/docs/app/building-your-application/routing/route-handlers#dynamic-route-segments
+export type VerifyResponse = {
+  verified?: boolean,
+  error?: string,
+}
+
 export async function POST(request: Request) {
   const params: ControllerVerifyParams = await request.json()
-  // console.log(`[controller/verify]`, params.address, params.chainId, params.messageHash)
+  // console.log(`[controller/verify] params:`, params.address, params.chainId, params.messageHash)
 
-  const verified = await verify_message(params);
-  const response = {
-    address: params.address,
-    chainId: params.chainId,
-    messageHash: params.messageHash,
-    verified,
+  let response: VerifyResponse = {}
+  try {
+    const verified = await verify_message(params);
+    response = {
+      // address: params.address,
+      // chainId: params.chainId,
+      // messageHash: params.messageHash,
+      verified,
+    }
+  } catch (e: unknown) {
+    response = {
+      verified: false,
+      error: e instanceof Error ? e.message : e as string,
+    }
   }
 
   return new Response(JSON.stringify(response), {
