@@ -35,6 +35,9 @@ export async function GET(
     is_memorized: searchParams.get('is_memorized') === 'true',
     duel_id: parseInt(searchParams.get('duel_id') || '0'),
     pass_id: parseInt(searchParams.get('pass_id') || '0'),
+    timestamp_registered: parseInt(searchParams.get('timestamp_registered') || '0'),
+    timestamp_active: parseInt(searchParams.get('timestamp_active') || '0'),
+    level: parseInt(searchParams.get('level') || '0'),
   }
 
   // get player name
