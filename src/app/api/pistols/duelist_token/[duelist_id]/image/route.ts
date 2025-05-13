@@ -46,7 +46,7 @@ export async function GET(
   }
 
   // render svg
-  const svg = token.renderSvg(props)
+  const svg = await token.renderSvg(props)
 
   return new Response(svg, {
     status: 200,

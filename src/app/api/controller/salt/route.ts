@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BigNumberish } from "starknet";
-import { poseidon } from "@underware/pistols-sdk/utils/starknet";
+import { poseidon } from "@underware/pistols-sdk/starknet";
 import { bigintToHex } from "@underware/pistols-sdk/utils";
 import { ControllerVerifyParams, verify_message } from "../lib";
 

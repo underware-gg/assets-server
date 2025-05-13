@@ -42,7 +42,7 @@ export async function GET(
     props.username_b = await getControllerUsername(props.address_b)
   }
 
-  const svg = token.renderSvg(props)
+  const svg = await token.renderSvg(props)
 
   return new Response(svg, {
     status: 200,
