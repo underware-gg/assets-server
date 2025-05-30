@@ -16,6 +16,7 @@ export async function emit_player_social_link(
   playerAddress: string,
   userName: string,
   userId: string,
+  avatar: string,
 ): Promise<boolean> {
   const dojoProvider: DojoProvider = getDojoProvider(chainId);
   const account: Account = getAccount(dojoProvider.provider);
@@ -27,6 +28,7 @@ export async function emit_player_social_link(
       playerAddress,
       userName,
       userId,
+      avatar,
     ),
   ]
   const tx = await dojoProvider.execute(account, calls, NAMESPACE, _details);

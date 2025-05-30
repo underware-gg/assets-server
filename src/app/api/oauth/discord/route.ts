@@ -93,6 +93,7 @@ export async function GET(request: NextRequest) {
   //
   let userName: string;
   let userId: string;
+  let avatar: string;
   try {
     const response = await fetch(`https://discord.com/api/users/@me`, {
       method: 'GET',
@@ -105,6 +106,7 @@ export async function GET(request: NextRequest) {
     // console.log(`[oauth/discord] @me:`, data);
     userName = data.username;
     userId = data.id;
+    avatar = data.avatar;
   } catch (error) {
     return _returnError(`@me error`, error as Error);
   }
@@ -119,6 +121,7 @@ export async function GET(request: NextRequest) {
     state.playerAddress,
     userName,
     userId,
+    avatar,
   );
 
   if (state.redirectUrl) {
