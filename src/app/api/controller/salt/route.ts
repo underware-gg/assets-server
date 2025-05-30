@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BigNumberish } from "starknet";
-import { poseidon } from "@underware/pistols-sdk/starknet";
-import { bigintToHex } from "@underware/pistols-sdk/utils";
-import { ControllerVerifyParams, verify_message } from "../lib";
+import { ControllerVerifyParams, verify_message } from "../../../../utils/controller";
+import { generate_salt } from "../salt";
 
 export type SaltGeneratorResponse = {
   salt?: BigNumberish,
@@ -19,26 +18,19 @@ export async function POST(request: Request) {
   let response: SaltGeneratorResponse = {};
   try {
     const verified = await verify_message(params);
-    if (verified && process.env.SALT_PRIVATE_KEY) {
+    if (verified) {
       // console.log(`[controller/salt] generate:`, params.address, params.chainId, process.env.SALT_PRIVATE_KEY)
-      const salt = bigintToHex(
-        poseidon([
-          params.address,
-          params.messageHash,
-          process.env.SALT_PRIVATE_KEY,
-        ])
+      const salt = generate_salt(
+        params.address,
+        params.messageHash,
       );
-      response = {
-        salt,
-      }
+      response = salt ? { salt } : { error: 'Error generating salt' }
     } else {
-      response = {
-        error: 'Invalid signature',
-      }
+      response = { error: 'Invalid signature' }
     }
   } catch (e: unknown) {
     response = {
-      error: 'Invalid signature',
+      error: 'Error verifying signature',
       message: e instanceof Error ? e.message : e as string,
     }
   }

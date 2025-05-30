@@ -1,7 +1,7 @@
 import { type NextRequest } from 'next/server'
 import { duel_token as token } from '@underware/pistols-sdk/pistols/tokens'
 import { constants } from '@underware/pistols-sdk/pistols/gen'
-import { getControllerUsername } from '@/utils/controller'
+import { getControllerUsername } from '@/utils/controller_lookup'
 
 // next.js app routerAPI routes
 // https://nextjs.org/docs/app/building-your-application/routing/route-handlers#dynamic-route-segments
