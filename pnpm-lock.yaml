@@ -18,8 +18,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.3
       '@underware/pistols-sdk':
-        specifier: 1.0.15
-        version: 1.0.15(@cartridge/controller@0.7.13(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.6(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)
+        specifier: 1.0.16
+        version: 1.0.16(@cartridge/controller@0.7.13(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.6(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)
       next:
         specifier: 15.2.1
         version: 15.2.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -797,8 +797,8 @@ packages:
     resolution: {integrity: sha512-2z8JQJWAzPdDd51dRQ/oqIJxe99/hoLIqmf8RMCAJQtYDc535W/Jt2+RTP4bP0aKeBG1F65yjIZuczOXCmbWwg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@underware/pistols-sdk@1.0.15':
-    resolution: {integrity: sha512-nPCHT4fIdEKBUmK58mQGRFaGc0OFjDM2WHUKK1CwyMaqSj1PbDOVIa1qOnU2ZMFREe3LGZeWSErNtcKSPkuwOA==}
+  '@underware/pistols-sdk@1.0.16':
+    resolution: {integrity: sha512-ti0x0BT2yR13YLYx4lETBzpsnPsBIJT4wnW+jJyJ8iUDEbHNyxVajSwvPwVSYzUgugR1YTFOxk2neK6POGRehQ==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -4174,7 +4174,7 @@ snapshots:
       '@typescript-eslint/types': 8.26.0
       eslint-visitor-keys: 4.2.0
 
-  '@underware/pistols-sdk@1.0.15(@cartridge/controller@0.7.13(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.6(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)':
+  '@underware/pistols-sdk@1.0.16(@cartridge/controller@0.7.13(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.6(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)':
     dependencies:
       '@cartridge/controller': 0.7.13(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39)
       '@dojoengine/core': 1.5.6(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)
