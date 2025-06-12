@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ControllerVerifyParams, verify_message } from "../../../../utils/controller";
+import { ControllerVerifyParams, verify_message } from "@/utils/controller";
 
 export type VerifyResponse = {
   verified?: boolean,

@@ -5,21 +5,9 @@ import { ChainId, GeneralPurposeMessage, GeneralPurposeState, makeStarknetDomain
 import { createTypedMessage, getMessageHash } from "@underware/pistols-sdk/starknet";
 import { bigintEquals } from "@underware/pistols-sdk/utils";
 import { constants } from "@underware/pistols-sdk/pistols/gen";
-import { emit_player_social_link } from "@/utils/pistols";
-import { generate_salt } from "../../controller/salt";
-
-const _returnError = (error: string | object, exception?: Error | string) => {
-  return new NextResponse(JSON.stringify(typeof error == 'object' ? error : {
-    error,
-    exception: exception ? (exception instanceof Error ? exception.message : exception as string) : undefined,
-  }), {
-    status: 400,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
-}
+import { emit_player_social_link } from "@/pistols/contractCalls";
+import { generate_salt } from "@/app/api/controller/salt";
+import { _returnError } from "@/app/api/_error";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -44,7 +32,7 @@ export async function GET(request: NextRequest) {
   const starknetDomain: StarknetDomain = makeStarknetDomain({ chainId: state.chainId });
   const typedMessage = createTypedMessage({ starknetDomain, messages });
   const messageHash = getMessageHash(typedMessage, state.playerAddress);
-  const salt = generate_salt(state.playerAddress, messageHash);
+  const salt: bigint | null = generate_salt(state.playerAddress, messageHash);
   // validate...
   if (!bigintEquals(state.salt, salt)) {
     return _returnError(`Invalid salt`);

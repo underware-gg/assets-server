@@ -7,9 +7,13 @@ import { getControllerUsername } from '@/utils/controller_lookup'
 // https://nextjs.org/docs/app/building-your-application/routing/route-handlers#dynamic-route-segments
 // https://nextjs.org/docs/app/building-your-application/routing/route-handlers#url-query-parameters
 
+export type PistolsDuelistTokenImageSlugs = {
+  duelist_id: string,
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ duelist_id: string }> }
+  { params }: { params: Promise<PistolsDuelistTokenImageSlugs> }
 ) {
   // route slug
   const { duelist_id } = await params
