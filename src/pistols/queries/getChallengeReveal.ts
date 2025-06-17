@@ -1,7 +1,6 @@
 import { BigNumberish } from 'starknet';
 import { DojoNetworkConfig } from '@underware/pistols-sdk/pistols/config';
-import { bigintToAddress } from '@underware/pistols-sdk/utils';
-import { queryTorii } from '@/dojo/sql';
+import { bigintToAddress, queryToriiSql } from '@underware/pistols-sdk/utils';
 
 type ChallengeRevealResponseRaw = Array<{
   duel_id: string;
@@ -65,7 +64,7 @@ where C.duel_id = "${bigintToAddress(duelId)}"
 and C.duel_id = R.duel_id
 `;
   // console.log(`getChallengeReveal(${duelId}):`, query);
-  const response = await queryTorii(config.sqlUrl, query, formatFn);
+  const response = await queryToriiSql(config.sqlUrl, query, formatFn);
   // console.log(`getChallengeReveal(${duelId}):`, response);
   return response;
 };
