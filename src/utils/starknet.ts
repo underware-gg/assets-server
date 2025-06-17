@@ -1,6 +1,6 @@
 import { Account, AccountInterface, RpcProvider } from 'starknet';
 
-export function getNodeUrl(chainId: string): string {
+export function getCartridgeRpcUrl(chainId: string): string {
   let nodeUrl = '';
   if (chainId === 'SN_MAIN') {
     nodeUrl = 'https://api.cartridge.gg/x/starknet/mainnet'
@@ -14,12 +14,12 @@ export function getNodeUrl(chainId: string): string {
   return nodeUrl;
 }
 
-export function getRpcProvider(chainId: string): RpcProvider {
-  const nodeUrl = getNodeUrl(chainId);
+export function makeRpcProvider(chainId: string): RpcProvider {
+  const nodeUrl = getCartridgeRpcUrl(chainId);
   return new RpcProvider({ nodeUrl });
 }
 
-export function getAccount(rpcProvider: RpcProvider): Account {
+export function makeStarknetAccount(rpcProvider: RpcProvider): Account {
   if (!process.env.STARKNET_ACCOUNT) throw new Error('Missing STARKNET_ACCOUNT');
   if (!process.env.STARKNET_KEY) throw new Error('Missing STARKNET_KEY');
   return new Account(rpcProvider, process.env.STARKNET_ACCOUNT!, process.env.STARKNET_KEY!);
