@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { BigNumberish, StarknetDomain, TypedData } from "starknet";
 import { ChainId, CommitMoveMessage, DojoNetworkConfig, makeStarknetDomain } from "@underware/pistols-sdk/pistols/config";
 import { createTypedMessage, getMessageHash, getTypeHash } from "@underware/pistols-sdk/starknet";
-import { getChallengeReveal } from "@/pistols/queries/getChallengeReveal";
+import { ChallengeRevealResponse, getChallengeReveal } from "@/pistols/queries/getChallengeReveal";
 import { getConfig } from "@/pistols/config";
 import { generate_salt } from "@/app/api/controller/salt";
 import { _returnError } from "@/app/api/_error";
@@ -25,9 +25,13 @@ export type PistolsRevealSlugs = {
 }
 
 export type PistolsRevealResponse = {
-  salt?: BigNumberish,
-  revealed?: boolean,
+  reveal_a?: DuelistReveal,
+  reveal_b?: DuelistReveal,
   error?: string,
+}
+export type DuelistReveal = {
+  revealed: boolean,
+  salt?: BigNumberish,
 }
 
 export async function GET(
@@ -44,7 +48,7 @@ export async function GET(
   console.log(`[pistols/reveal] params:`, duelId, chainId)
 
   //
-  // 1. get Challenge
+  // 1. validate Challenge state
   const config: DojoNetworkConfig = getConfig(chainId);
   const ch = await getChallengeReveal(config, duelId);
   if (!ch) {
@@ -58,45 +62,7 @@ export async function GET(
   }
 
   //
-  // 2. find revealing player
-  let address: bigint;
-  let duelistId: bigint;
-  let movesHash: bigint;
-  if (ch.saltA == 0n && ch.saltB == 0n) {
-    return _returnError(`Duel [${duelId}] is not revealed by any player`);
-  }
-  if (ch.saltA == 0n) {
-    address = ch.addressA;
-    duelistId = ch.duelistIdA;
-    movesHash = ch.hashedA;
-  } else if (ch.saltB == 0n) {
-    address = ch.addressB;
-    duelistId = ch.duelistIdB;
-    movesHash = ch.hashedB;
-  } else {
-    return _returnError(`Duel [${duelId}] is revealed by both players`);
-  }
-
-  //
-  // 3. generate message hash
-  const messages: CommitMoveMessage = {
-    duelId: ch.duelId,
-    duelistId: duelistId,
-  }
-  const starknetDomain: StarknetDomain = makeStarknetDomain({ chainId });
-  const typedMessage: TypedData = createTypedMessage({ starknetDomain, messages })
-  const messageHash: string = getMessageHash(typedMessage, address)
-
-  //
-  // 4. generate salt
-  const salt: bigint | null = generate_salt(address, messageHash);
-  if (!salt) {
-    return _returnError(`Duel [${duelId}] salt generation error`);
-  }
-  console.log(`[pistols/reveal] SALT:`, bigintToHex(address), bigintToHex(duelId), bigintToHex(duelistId), bigintToHex(salt));
-
-  //
-  // 5. get duel deck
+  // 2. get duel deck
   let deck: number[][];
   try {
     deck = await get_duel_deck(chainId, duelId);
@@ -105,32 +71,29 @@ export async function GET(
     return _returnError(`Duel [${duelId}] get_duel_deck() error:`, error as Error);
   }
 
-  //
-  // 6. restore moves
-  const moves: number[] = restoreMovesFromHash(salt, movesHash, deck);
-  console.log(`[pistols/reveal] moves:`, moves);
-  if (moves.length == 0) {
-    return _returnError(`Duel [${duelId}] unable to restore moves`);
-  }
 
-  // 7. reveal moves
-  let revealed = false;
-  if (process.env.REVEAL_DUELS_ONCHAIN === 'true') {
-    try {
-      await reveal_moves(chainId, duelId, duelistId, salt, moves);
-      revealed = true;
-    } catch (error) {
-      console.error(`[pistols/reveal] reveal_moves() error:`, duelId, error);
-      return _returnError(`Duel [${duelId}] reveal_moves() error:`, error as Error);
-    }
-  }
-
-  //
-  // 8. return salt and revealed status
+  // prepare response
   const response: PistolsRevealResponse = {
-    salt: salt ? bigintToHex(salt) : '0x0',
-    revealed,
+    reveal_a: { revealed: false },
+    reveal_b: { revealed: false },
   };
+
+  //
+  // 3. find revealing players
+  if (ch.saltA == 0n) {
+    const reveal_a = await _reveal_move(chainId, duelId, ch.addressA, ch.duelistIdA, ch.hashedA, deck);
+    if (reveal_a instanceof NextResponse) {
+      return reveal_a as NextResponse;
+    }
+    response.reveal_a = reveal_a as DuelistReveal;
+  }
+  if (ch.saltB == 0n) {
+    const reveal_b = await _reveal_move(chainId, duelId, ch.addressB, ch.duelistIdB, ch.hashedB, deck);
+    if (reveal_b instanceof NextResponse) {
+      return reveal_b as NextResponse;
+    }
+    response.reveal_b = reveal_b as DuelistReveal;
+  }
 
   return new Response(JSON.stringify(response), {
     status: 200,
@@ -152,3 +115,51 @@ export async function OPTIONS(request: NextRequest) {
     }
   })
 }
+
+
+const _reveal_move = async (chainId: ChainId, duelId: bigint, address: bigint, duelistId: bigint, movesHash: bigint, deck: number[][]): Promise<NextResponse | DuelistReveal> => {
+
+  //
+  // 4. generate message hash
+  const messages: CommitMoveMessage = {
+    duelId: duelId,
+    duelistId: duelistId,
+  }
+  const starknetDomain: StarknetDomain = makeStarknetDomain({ chainId });
+  const typedMessage: TypedData = createTypedMessage({ starknetDomain, messages })
+  const messageHash: string = getMessageHash(typedMessage, address)
+
+  //
+  // 5. generate salt
+  const salt: bigint | null = generate_salt(address, messageHash);
+  if (!salt) {
+    return _returnError(`Duel [${duelId}] salt generation error`);
+  }
+  console.log(`[pistols/reveal] SALT:`, bigintToHex(address), bigintToHex(duelId), bigintToHex(duelistId), bigintToHex(salt));
+
+  //
+  // 6. restore moves
+  const moves: number[] = restoreMovesFromHash(salt, movesHash, deck);
+  console.log(`[pistols/reveal] moves:`, moves);
+  if (moves.length == 0) {
+    return _returnError(`Duel [${duelId}] unable to restore moves`);
+  }
+
+  // 7. reveal moves
+  let revealed = false;
+  if (process.env.REVEAL_DUELS_ONCHAIN === 'true') {
+    try {
+      await reveal_moves(chainId, duelId, duelistId, salt, moves);
+      revealed = true;
+    } catch (error) {
+      console.error(`[pistols/reveal] reveal_moves() error:`, duelId, error);
+      return _returnError(`Duel [${duelId}] reveal_moves() error:`, error as Error);
+    }
+  }
+
+  return {
+    salt,
+    revealed,
+  };
+}
+

@@ -16,7 +16,7 @@ type ChallengeRevealResponseRaw = Array<{
   salt_b: string;
 }>;
 // format we need
-type ChallengeRevealResponse = {
+export type ChallengeRevealResponse = {
   duelId: bigint;
   challengeState: string;
   addressA: bigint;
