@@ -25,13 +25,15 @@ export type PistolsRevealSlugs = {
 }
 
 export type PistolsRevealResponse = {
-  reveal_a?: DuelistReveal,
-  reveal_b?: DuelistReveal,
+  reveal_a?: DuelistReveal | boolean,
+  reveal_b?: DuelistReveal | boolean,
   error?: string,
 }
 export type DuelistReveal = {
   revealed: boolean,
-  salt?: BigNumberish,
+  duelistId: bigint,
+  salt: BigNumberish,
+  moves: number[],
 }
 
 export async function GET(
@@ -71,29 +73,42 @@ export async function GET(
     return _returnError(`Duel [${duelId}] get_duel_deck() error:`, error as Error);
   }
 
+  //
+  // 3. restore moves for revealing players
+  let reveal_a: DuelistReveal | undefined;
+  let reveal_b: DuelistReveal  | undefined;
+  if (ch.saltA == 0n) {
+    const moves_a: DuelistReveal | NextResponse = _restore_moves(chainId, duelId, ch.addressA, ch.duelistIdA, ch.hashedA, deck);
+    if (moves_a instanceof NextResponse) {
+      return moves_a as NextResponse;
+    }
+    reveal_a = moves_a as DuelistReveal;
+  }
+  if (ch.saltB == 0n) {
+    const moves_b: DuelistReveal | NextResponse = _restore_moves(chainId, duelId, ch.addressB, ch.duelistIdB, ch.hashedB, deck);
+    if (moves_b instanceof NextResponse) {
+      return moves_b as NextResponse;
+    }
+    reveal_b = moves_b as DuelistReveal;
+  }
+
+
+  // 7. reveal moves
+  if ((reveal_a?.revealed || reveal_b?.revealed) && process.env.REVEAL_DUELS_ONCHAIN === 'true') {
+    try {
+      await reveal_moves(chainId, duelId, [reveal_a, reveal_b].filter(Boolean) as DuelistReveal[]);
+    } catch (error) {
+      console.error(`[pistols/reveal] reveal_moves() error:`, duelId, reveal_a, reveal_b, error);
+      return _returnError(`Duel [${duelId}] reveal_moves() error:`, error as Error);
+    }
+  }
 
   // prepare response
   const response: PistolsRevealResponse = {
-    reveal_a: { revealed: false },
-    reveal_b: { revealed: false },
+    reveal_a: reveal_a ?? false,
+    reveal_b: reveal_b ?? false,
   };
 
-  //
-  // 3. find revealing players
-  if (ch.saltA == 0n) {
-    const reveal_a = await _reveal_move(chainId, duelId, ch.addressA, ch.duelistIdA, ch.hashedA, deck);
-    if (reveal_a instanceof NextResponse) {
-      return reveal_a as NextResponse;
-    }
-    response.reveal_a = reveal_a as DuelistReveal;
-  }
-  if (ch.saltB == 0n) {
-    const reveal_b = await _reveal_move(chainId, duelId, ch.addressB, ch.duelistIdB, ch.hashedB, deck);
-    if (reveal_b instanceof NextResponse) {
-      return reveal_b as NextResponse;
-    }
-    response.reveal_b = reveal_b as DuelistReveal;
-  }
 
   return new Response(JSON.stringify(response), {
     status: 200,
@@ -117,10 +132,10 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 
-const _reveal_move = async (chainId: ChainId, duelId: bigint, address: bigint, duelistId: bigint, movesHash: bigint, deck: number[][]): Promise<NextResponse | DuelistReveal> => {
+const _restore_moves = (chainId: ChainId, duelId: bigint, address: bigint, duelistId: bigint, movesHash: bigint, deck: number[][]): NextResponse | DuelistReveal => {
 
   //
-  // 4. generate message hash
+  // 1. generate message hash
   const messages: CommitMoveMessage = {
     duelId: duelId,
     duelistId: duelistId,
@@ -130,7 +145,7 @@ const _reveal_move = async (chainId: ChainId, duelId: bigint, address: bigint, d
   const messageHash: string = getMessageHash(typedMessage, address)
 
   //
-  // 5. generate salt
+  // 2. generate salt
   const salt: bigint | null = generate_salt(address, messageHash);
   if (!salt) {
     return _returnError(`Duel [${duelId}] salt generation error`);
@@ -138,28 +153,21 @@ const _reveal_move = async (chainId: ChainId, duelId: bigint, address: bigint, d
   console.log(`[pistols/reveal] SALT:`, bigintToHex(address), bigintToHex(duelId), bigintToHex(duelistId), bigintToHex(salt));
 
   //
-  // 6. restore moves
+  // 3. restore moves
   const moves: number[] = restoreMovesFromHash(salt, movesHash, deck);
   console.log(`[pistols/reveal] moves:`, moves);
   if (moves.length == 0) {
     return _returnError(`Duel [${duelId}] unable to restore moves`);
   }
 
-  // 7. reveal moves
-  let revealed = false;
-  if (process.env.REVEAL_DUELS_ONCHAIN === 'true') {
-    try {
-      await reveal_moves(chainId, duelId, duelistId, salt, moves);
-      revealed = true;
-    } catch (error) {
-      console.error(`[pistols/reveal] reveal_moves() error:`, duelId, error);
-      return _returnError(`Duel [${duelId}] reveal_moves() error:`, error as Error);
-    }
-  }
+  // optimistic, if we must reveal
+  const revealed = (process.env.REVEAL_DUELS_ONCHAIN === 'true');
 
   return {
-    salt,
     revealed,
+    duelistId,
+    salt,
+    moves,
   };
 }
 

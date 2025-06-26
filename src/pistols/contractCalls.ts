@@ -4,6 +4,7 @@ import { makeCustomEnum } from '@underware/pistols-sdk/starknet';
 import { constants } from '@underware/pistols-sdk/pistols/gen';
 import { ChainId, NAMESPACE } from '@underware/pistols-sdk/pistols/config';
 import { makeDojoProvider } from '@/pistols/config';
+import { DuelistReveal } from '@/app/api/pistols/reveal/[duel_id]/route';
 
 //--------------------------------
 // read calls
@@ -52,20 +53,18 @@ export async function emit_player_social_link(
 
 export async function reveal_moves(
   chainId: ChainId,
-  duelistId: BigNumberish,
   duelId: BigNumberish,
-  salt: BigNumberish,
-  moves: number[],
+  reveals: DuelistReveal[],
 ): Promise<boolean> {
   const { dojoProvider, account, world } = makeDojoProvider(chainId);
-  const calls: DojoCall[] = [
+  const calls: DojoCall[] = reveals.map(reveal => (
     world.game.buildRevealMovesCalldata(
+      reveal.duelistId,
       duelId,
-      duelistId,
-      salt,
-      moves,
-    ),
-  ]
+      reveal.salt,
+      reveal.moves,
+    )
+  ));
   const tx = await dojoProvider.execute(account, calls, NAMESPACE, _details);
   // console.log(`[reveal_moves] tx:`, tx);
   const _receipt = await account.waitForTransaction(tx.transaction_hash, { retryInterval: 200 })
