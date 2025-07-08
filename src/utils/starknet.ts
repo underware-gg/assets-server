@@ -1,9 +1,10 @@
 import { Account, AccountInterface, constants, RpcProvider } from 'starknet';
+import * as ENV from '@/pistols/env';
 
 export function getCartridgeRpcUrl(chainId: string): string {
   let nodeUrl = '';
   if (chainId === 'SN_MAIN') {
-    nodeUrl = 'https://api.cartridge.gg/x/starknet/mainnet'
+    nodeUrl = ENV.RPC_URL || 'https://api.cartridge.gg/x/starknet/mainnet'
   } else if (chainId === 'SN_SEPOLIA') {
     nodeUrl = 'https://api.cartridge.gg/x/starknet/sepolia'
   } else if (chainId === 'KATANA_LOCAL') {
@@ -11,6 +12,7 @@ export function getCartridgeRpcUrl(chainId: string): string {
   } else {
     throw new Error('Invalid chainId')
   }
+  // console.log(`[getCartridgeRpcUrl] nodeUrl:`, nodeUrl);
   return nodeUrl;
 }
 
