@@ -7,6 +7,8 @@ export function getCartridgeRpcUrl(chainId: string): string {
     nodeUrl = ENV.RPC_URL || 'https://api.cartridge.gg/x/starknet/mainnet'
   } else if (chainId === 'SN_SEPOLIA') {
     nodeUrl = 'https://api.cartridge.gg/x/starknet/sepolia'
+    // nodeUrl = 'https://api.cartridge.gg/x/starknet/sepolia/rpc/v7_0'
+    // nodeUrl = 'https://starknet-sepolia.public.blastapi.io/rpc/v0_7'
   } else if (chainId === 'KATANA_LOCAL') {
     nodeUrl = 'http://127.0.0.1:5050'
   } else {

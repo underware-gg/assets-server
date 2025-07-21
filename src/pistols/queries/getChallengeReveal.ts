@@ -1,9 +1,11 @@
 import { BigNumberish } from 'starknet';
 import { DojoNetworkConfig } from '@underware/pistols-sdk/pistols/config';
 import { bigintToAddress, queryToriiSql } from '@underware/pistols-sdk/utils';
+import { constants } from '@underware/pistols-sdk/pistols/gen';
 
 type ChallengeRevealResponseRaw = Array<{
   duel_id: string;
+  duel_type: string;
   challenge_state: string;
   address_a: string;
   address_b: string;
@@ -18,12 +20,13 @@ type ChallengeRevealResponseRaw = Array<{
 // format we need
 export type ChallengeRevealResponse = {
   duelId: bigint;
-  challengeState: string;
+  duelType: constants.DuelType;
+  challengeState: constants.ChallengeState;
   addressA: bigint;
   addressB: bigint;
   duelistIdA: bigint;
   duelistIdB: bigint;
-  roundState: string;
+  roundState: constants.RoundState;
   hashedA: bigint;
   hashedB: bigint;
   saltA: bigint;
@@ -32,12 +35,13 @@ export type ChallengeRevealResponse = {
 function formatFn(rows: ChallengeRevealResponseRaw): ChallengeRevealResponse | null {
   return rows.length > 0 ? {
     duelId: BigInt(rows[0].duel_id),
-    challengeState: rows[0].challenge_state,
+    duelType: rows[0].duel_type as constants.DuelType,
+    challengeState: rows[0].challenge_state as constants.ChallengeState,
     addressA: BigInt(rows[0].address_a),
     addressB: BigInt(rows[0].address_b),
     duelistIdA: BigInt(rows[0].duelist_id_a),
     duelistIdB: BigInt(rows[0].duelist_id_b),
-    roundState: rows[0].round_state,
+    roundState: rows[0].round_state as constants.RoundState,
     hashedA: BigInt(rows[0].hashed_a),
     hashedB: BigInt(rows[0].hashed_b),
     saltA: BigInt(rows[0].salt_a),
@@ -49,6 +53,7 @@ export const getChallengeReveal = async (config: DojoNetworkConfig, duelId: BigN
   const query = `
 select
 C.duel_id as duel_id,
+C.duel_type as duel_type,
 C.state as challenge_state,
 C.address_a as address_a,
 C.address_b as address_b,

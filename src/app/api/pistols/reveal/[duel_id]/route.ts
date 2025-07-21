@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BigNumberish, StarknetDomain, TypedData } from "starknet";
 import { ChainId, CommitMoveMessage, DojoNetworkConfig, makeStarknetDomain } from "@underware/pistols-sdk/pistols/config";
-import { createTypedMessage, getMessageHash, getTypeHash } from "@underware/pistols-sdk/starknet";
+import { createTypedMessage, getMessageHash } from "@underware/pistols-sdk/starknet";
+import { restore_moves_from_hash } from "@underware/pistols-sdk/pistols";
 import { ChallengeRevealResponse, getChallengeReveal } from "@/pistols/queries/getChallengeReveal";
+import { bigintToHex } from "@underware/pistols-sdk/utils";
+import { constants } from "@underware/pistols-sdk/pistols/gen";
 import { getConfig } from "@/pistols/config";
 import { generate_salt } from "@/app/api/controller/salt";
+import { get_duel_deck, make_bot_salt, reveal_moves } from "@/pistols/contractCalls";
 import { _returnError } from "@/app/api/_error";
-import { bigintToHex } from "@underware/pistols-sdk/utils";
-import { get_duel_deck, reveal_moves } from "@/pistols/contractCalls";
-import { restoreMovesFromHash } from "@underware/pistols-sdk/pistols";
 
 //
 // reveal last player's moves in a duel
@@ -52,7 +53,8 @@ export async function GET(
   //
   // 1. validate Challenge state
   const config: DojoNetworkConfig = getConfig(chainId);
-  const ch = await getChallengeReveal(config, duelId);
+  const ch: ChallengeRevealResponse | null = await getChallengeReveal(config, duelId);
+  // console.log(`[pistols/reveal] duel:`, ch)
   if (!ch) {
     return _returnError(`Duel [${duelId}] not found`);
   }
@@ -78,14 +80,15 @@ export async function GET(
   let reveal_a: DuelistReveal | undefined;
   let reveal_b: DuelistReveal  | undefined;
   if (ch.saltA == 0n) {
-    const moves_a: DuelistReveal | NextResponse = _restore_moves(chainId, duelId, ch.addressA, ch.duelistIdA, ch.hashedA, deck);
+    const moves_a: DuelistReveal | NextResponse = await _restore_moves(chainId, duelId, ch.addressA, ch.duelistIdA, ch.hashedA, deck, false);
     if (moves_a instanceof NextResponse) {
       return moves_a as NextResponse;
     }
     reveal_a = moves_a as DuelistReveal;
   }
   if (ch.saltB == 0n) {
-    const moves_b: DuelistReveal | NextResponse = _restore_moves(chainId, duelId, ch.addressB, ch.duelistIdB, ch.hashedB, deck);
+    const isBot = (ch.duelType === constants.DuelType.BotPlayer);
+    const moves_b: DuelistReveal | NextResponse = await _restore_moves(chainId, duelId, ch.addressB, ch.duelistIdB, ch.hashedB, deck, isBot);
     if (moves_b instanceof NextResponse) {
       return moves_b as NextResponse;
     }
@@ -132,21 +135,34 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 
-const _restore_moves = (chainId: ChainId, duelId: bigint, address: bigint, duelistId: bigint, movesHash: bigint, deck: number[][]): NextResponse | DuelistReveal => {
+const _restore_moves = async (
+  chainId: ChainId,
+  duelId: bigint,
+  address: bigint,
+  duelistId: bigint,
+  movesHash: bigint,
+  deck: number[][],
+  isBot: boolean,
+): Promise<NextResponse | DuelistReveal> => {
 
   //
-  // 1. generate message hash
-  const messages: CommitMoveMessage = {
-    duelId: duelId,
-    duelistId: duelistId,
+  // 1. generate salt
+  let salt: bigint | null = null;
+  if (isBot) {
+    // bots have deterministic salt based on the duel id
+    salt = await make_bot_salt(chainId, duelId);
+  } else {
+    // a. create player's message hash
+    const messages: CommitMoveMessage = {
+      duelId: duelId,
+      duelistId: duelistId,
+    };
+    const starknetDomain: StarknetDomain = makeStarknetDomain({ chainId });
+    const typedMessage: TypedData = createTypedMessage({ starknetDomain, messages });
+    const messageHash: string = getMessageHash(typedMessage, address);
+    // b. generate salt
+    salt = generate_salt(address, messageHash);
   }
-  const starknetDomain: StarknetDomain = makeStarknetDomain({ chainId });
-  const typedMessage: TypedData = createTypedMessage({ starknetDomain, messages })
-  const messageHash: string = getMessageHash(typedMessage, address)
-
-  //
-  // 2. generate salt
-  const salt: bigint | null = generate_salt(address, messageHash);
   if (!salt) {
     return _returnError(`Duel [${duelId}] salt generation error`);
   }
@@ -154,7 +170,7 @@ const _restore_moves = (chainId: ChainId, duelId: bigint, address: bigint, dueli
 
   //
   // 3. restore moves
-  const moves: number[] = restoreMovesFromHash(salt, movesHash, deck);
+  const moves: number[] = restore_moves_from_hash(salt, movesHash, deck);
   console.log(`[pistols/reveal] moves:`, moves);
   if (moves.length == 0) {
     return _returnError(`Duel [${duelId}] unable to restore moves`);

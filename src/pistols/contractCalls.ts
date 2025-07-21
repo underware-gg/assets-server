@@ -15,8 +15,18 @@ export async function get_duel_deck(
 ): Promise<number[][]> {
   const { world } = makeDojoProvider(chainId);
   const result = await world.game.getDuelDeck(duelId);
-  // console.log(`[get_duel_deck] result:`, result);
+  // console.log(`[game.get_duel_deck] result:`, result);
   return result as number[][];
+}
+
+export async function make_bot_salt(
+  chainId: ChainId,
+  duelId: bigint,
+): Promise<bigint> {
+  const { world } = makeDojoProvider(chainId);
+  const result = await world.bot_player.makeSalt(duelId);
+  console.log(`[bot_player.make_salt] result:`, result);
+  return result as bigint;
 }
 
 
@@ -65,6 +75,7 @@ export async function reveal_moves(
       reveal.moves,
     )
   ));
+  // console.log(`[PROVIDER]`, dojoProvider.provider);
   const tx = await dojoProvider.execute(account, calls, NAMESPACE, _details);
   // console.log(`[reveal_moves] tx:`, tx);
   const _receipt = await account.waitForTransaction(tx.transaction_hash, { retryInterval: 200 })
