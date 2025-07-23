@@ -18,8 +18,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.3
       '@underware/pistols-sdk':
-        specifier: 1.0.29
-        version: 1.0.29(@cartridge/controller@0.8.0(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.17(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)(universal-cookie@8.0.1)
+        specifier: 1.1.0
+        version: 1.1.0(@cartridge/controller@0.8.0(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.17(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)(universal-cookie@8.0.1)
       next:
         specifier: 15.2.1
         version: 15.2.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -800,8 +800,8 @@ packages:
     resolution: {integrity: sha512-2z8JQJWAzPdDd51dRQ/oqIJxe99/hoLIqmf8RMCAJQtYDc535W/Jt2+RTP4bP0aKeBG1F65yjIZuczOXCmbWwg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@underware/pistols-sdk@1.0.29':
-    resolution: {integrity: sha512-npwRb7id58o6g67qKCnD0s7PSjM8WV1DEnGHFnwcLL8eurSUuopGrk00YJyT6DJjSRwa7FhyWQCTteYuQc8sjA==}
+  '@underware/pistols-sdk@1.1.0':
+    resolution: {integrity: sha512-86jUbPAhYFwQ1TrlFoezfWuXN6mAB5/U+05EmPWflwo/OskORc2aX94OGRU4BJYwW199PD0YhuwkaSJlRPRsSw==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -4097,7 +4097,7 @@ snapshots:
       '@typescript-eslint/types': 8.26.0
       eslint-visitor-keys: 4.2.0
 
-  '@underware/pistols-sdk@1.0.29(@cartridge/controller@0.8.0(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.17(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)(universal-cookie@8.0.1)':
+  '@underware/pistols-sdk@1.1.0(@cartridge/controller@0.8.0(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(@dojoengine/core@1.5.17(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@starknet-react/chains@3.1.3)(react@19.0.0)(starknet@6.23.1)(universal-cookie@8.0.1)':
     dependencies:
       '@cartridge/controller': 0.8.0(@metamask/sdk@0.32.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(@types/react@19.0.10)(bufferutil@4.0.9)(open@10.1.0)(react@19.0.0)(starknet@6.23.1)(starknetkit@2.10.4(bufferutil@4.0.9)(starknet@6.23.1)(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39))(typescript@5.8.2)(utf-8-validate@5.0.10)(zod@3.25.39)
       '@dojoengine/core': 1.5.17(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)
