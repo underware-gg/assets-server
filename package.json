@@ -16,7 +16,7 @@
     "@cartridge/controller": "^0.8.0",
     "@dojoengine/core": "^1.5.16",
     "@starknet-react/chains": "^3.1.0",
-    "@underware/pistols-sdk": "1.1.0",
+    "@underware/pistols-sdk": "1.1.1",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
