@@ -13,14 +13,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cartridge/controller": "^0.8.0",
-    "@dojoengine/core": "^1.5.16",
-    "@starknet-react/chains": "^3.1.0",
-    "@underware/pistols-sdk": "1.1.1",
+    "@cartridge/controller": "^0.9.2",
+    "@dojoengine/core": "^1.6.0",
+    "@starknet-react/chains": "^4.0.1-beta.3",
+    "@underware/pistols-sdk": "1.1.2",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "starknet": "6.23.1",
+    "starknet": "^7.6.2",
     "universal-cookie": "^8.0.1"
   },
   "devDependencies": {
