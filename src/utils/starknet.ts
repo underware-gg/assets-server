@@ -4,10 +4,10 @@ import * as ENV from '@/pistols/env';
 export function getCartridgeRpcUrl(chainId: string): string {
   let nodeUrl = '';
   if (chainId === 'SN_MAIN') {
-    nodeUrl = ENV.RPC_URL || 'https://api.cartridge.gg/x/starknet/mainnet'
+    nodeUrl = ENV.RPC_URL || 'https://api.cartridge.gg/x/starknet/mainnet/rpc/v0_8'
   } else if (chainId === 'SN_SEPOLIA') {
-    nodeUrl = 'https://api.cartridge.gg/x/starknet/sepolia'
-    // nodeUrl = 'https://api.cartridge.gg/x/starknet/sepolia/rpc/v7_0'
+    nodeUrl = 'https://api.cartridge.gg/x/starknet/sepolia/rpc/v0_8'
+    // nodeUrl = 'https://api.cartridge.gg/x/starknet/sepolia/rpc/v0_8/rpc/v7_0'
     // nodeUrl = 'https://starknet-sepolia.public.blastapi.io/rpc/v0_7'
   } else if (chainId === 'KATANA_LOCAL') {
     nodeUrl = 'http://127.0.0.1:5050'
