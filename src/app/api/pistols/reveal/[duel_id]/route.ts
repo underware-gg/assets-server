@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BigNumberish, StarknetDomain, TypedData } from "starknet";
-import { ChainId, CommitMoveMessage, DojoNetworkConfig, makeStarknetDomain } from "@underware/pistols-sdk/pistols/config";
-import { createTypedMessage, getMessageHash } from "@underware/pistols-sdk/starknet";
-import { restore_moves_from_hash } from "@underware/pistols-sdk/pistols";
+import { ChainId, CommitMoveMessage, DojoNetworkConfig, getBotPlayerAddress, makeStarknetDomain, NetworkId } from "@underware/pistols-sdk/pistols/config";
 import { ChallengeRevealResponse, getChallengeReveal } from "@/pistols/queries/getChallengeReveal";
-import { bigintToHex } from "@underware/pistols-sdk/utils";
-import { constants } from "@underware/pistols-sdk/pistols/gen";
-import { getConfig } from "@/pistols/config";
-import { generate_salt } from "@/app/api/controller/salt";
+import { createTypedMessage, getMessageHash } from "@underware/pistols-sdk/starknet";
+import { bigintEquals, bigintToHex } from "@underware/pistols-sdk/utils";
 import { get_duel_deck, make_bot_salt, reveal_moves } from "@/pistols/contractCalls";
+import { restore_moves_from_hash } from "@underware/pistols-sdk/pistols";
+import { generate_salt } from "@/app/api/controller/salt";
+import { getConfig } from "@/pistols/config";
+// import { constants } from "@underware/pistols-sdk/pistols/gen";
 import { _returnError } from "@/app/api/_error";
 
 //
@@ -47,7 +47,8 @@ export async function GET(
   const searchParams = request.nextUrl.searchParams
   // all params
   const duelId: bigint = BigInt(duel_id);
-  const chainId: ChainId = searchParams.get('chain_id') as ChainId || ChainId.SN_MAIN;
+  const chainId: ChainId = (searchParams.get('chain_id') as ChainId || ChainId.SN_MAIN);
+  const networkId: NetworkId = (chainId == ChainId.SN_SEPOLIA ? NetworkId.SEPOLIA : NetworkId.MAINNET);
   console.log(`[pistols/reveal] params:`, duelId, chainId)
 
   //
@@ -87,7 +88,8 @@ export async function GET(
     reveal_a = moves_a as DuelistReveal;
   }
   if (ch.saltB == 0n) {
-    const isBot = (ch.duelType === constants.DuelType.BotPlayer);
+    // const isBot = (ch.duelType === constants.DuelType.BotPlayer);
+    const isBot = bigintEquals(ch.addressB, getBotPlayerAddress(networkId));
     const moves_b: DuelistReveal | NextResponse = await _restore_moves(chainId, duelId, ch.addressB, ch.duelistIdB, ch.hashedB, deck, isBot);
     if (moves_b instanceof NextResponse) {
       return moves_b as NextResponse;
