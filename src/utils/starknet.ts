@@ -1,4 +1,4 @@
-import { Account, AccountInterface, constants, RpcProvider } from 'starknet';
+import { Account, RpcProvider, Signer } from 'starknet';
 import * as ENV from '@/pistols/env';
 
 export function getCartridgeRpcUrl(chainId: string): string {
@@ -23,14 +23,12 @@ export function makeRpcProvider(chainId: string): RpcProvider {
   return new RpcProvider({ nodeUrl });
 }
 
-export function makeStarknetAccount(rpcProvider: RpcProvider): Account {
+export function makeStarknetAccount(provider: RpcProvider): Account {
   if (!process.env.STARKNET_ACCOUNT) throw new Error('Missing STARKNET_ACCOUNT');
   if (!process.env.STARKNET_KEY) throw new Error('Missing STARKNET_KEY');
-  return new Account(
-    rpcProvider,
-    process.env.STARKNET_ACCOUNT!,
-    process.env.STARKNET_KEY!,
-    undefined,
-    constants.TRANSACTION_VERSION.V3,
-  );
+  return new Account({
+    provider,
+    address: process.env.STARKNET_ACCOUNT!,
+    signer: new Signer(process.env.STARKNET_KEY!),
+  });
 }
