@@ -1,6 +1,6 @@
 import { BigNumberish } from 'starknet';
 import { DojoNetworkConfig } from '@underware/pistols-sdk/pistols/config';
-import { bigintToAddress, queryToriiSql } from '@underware/pistols-sdk/utils';
+import { bigintToAddress, bigintToHex128, queryToriiSql } from '@underware/pistols-sdk/utils';
 import { constants } from '@underware/pistols-sdk/pistols/gen';
 
 type ChallengeRevealResponseRaw = Array<{
@@ -65,7 +65,7 @@ R."moves_b.hashed" as hashed_b,
 R."moves_a.salt" as salt_a,
 R."moves_b.salt" as salt_b
 from "pistols-Challenge" C, "pistols-Round" R
-where C.duel_id = "${bigintToAddress(duelId)}"
+where C.duel_id = "${bigintToHex128(duelId)}"
 and C.duel_id = R.duel_id
 `;
   // console.log(`getChallengeReveal(${duelId}):`, query);
