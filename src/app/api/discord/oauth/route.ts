@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const code: string = searchParams.get('code') ?? '';
   const state: GeneralPurposeState = JSON.parse(searchParams.get('state') ?? '{}');
-  // console.log(`[oauth/discord] code:`, code);
-  // console.log(`[oauth/discord] state:`, state);
+  // console.log(`[discord/oauth] code:`, code);
+  // console.log(`[discord/oauth] state:`, state);
 
   if (!code) return _returnError(`Missing code`);
   if (!state?.chainId) return _returnError(`Missing state.chainId`);
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
       scope: 'identify email',
       code,
     });
-    // console.log(`[oauth/discord] body:`, body, body.toString());
+    // console.log(`[discord/oauth] body:`, body, body.toString());
     const response = await fetch(`https://discord.com/api/v10/oauth2/token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     if (data.error) {
       return _returnError(data);
     }
-    // console.log(`[oauth/discord] data:`, data);
+    // console.log(`[discord/oauth] data:`, data);
     accessToken = data.access_token;
     if (!accessToken) {
       return _returnError(`Invalid access token`);
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
     if (data.error) {
       return _returnError(data);
     }
-    // console.log(`[oauth/discord] @me:`, data);
+    // console.log(`[discord/oauth] @me:`, data);
     userName = data.username;
     userId = data.id;
     avatar = data.avatar;
