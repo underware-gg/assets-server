@@ -13,10 +13,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cartridge/controller": "0.10.5",
-    "@dojoengine/core": "^1.7.1",
+    "@cartridge/controller": "0.10.7",
+    "@dojoengine/core": "1.8.0",
     "@starknet-react/chains": "^5.0.1",
-    "@underware/pistols-sdk": "1.2.1",
+    "@underware/pistols-sdk": "1.3.2",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
