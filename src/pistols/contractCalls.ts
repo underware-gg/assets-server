@@ -46,7 +46,7 @@ export async function emit_player_social_link(
 ): Promise<boolean> {
   const { dojoProvider, account, world } = makeDojoProvider(chainId);
   const calls: DojoCall[] = [
-    world.game.buildEmitPlayerSocialLinkCalldata(
+    world.community.buildEmitPlayerSocialLinkCalldata(
       makeCustomEnum(socialPlatform) as CairoCustomEnum,
       playerAddress,
       userName,
